@@ -1,4 +1,4 @@
-'use client'
+
 
 import { useState } from 'react'
 import { Input } from "@/components/ui/input"
@@ -22,7 +22,7 @@ export default function AddWords() {
     setError(null)
     setSuccess(null)
     try {
-      const response = await fetch('/add', {
+      const response = await fetch('https://wordapi.modujobs.tech/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

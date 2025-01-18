@@ -61,7 +61,7 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
       <div className="container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         <Card className="mb-8 backdrop-blur-xl bg-white/70 shadow-lg transition-all duration-300 hover:shadow-xl">
-        <CardTitle>Word Query</CardTitle>
+        <CardTitle>Hot Word Query</CardTitle>
           <CardContent className="pt-6">
             <form onSubmit={handleWordQuery} className="max-w-2xl mx-auto flex gap-2">
               <Input

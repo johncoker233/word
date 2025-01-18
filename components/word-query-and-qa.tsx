@@ -12,7 +12,7 @@ import { Loader2 } from 'lucide-react'
 interface WordQueryResult {
   word: string;
   literal_translation: string;
-  english_translation: string;
+  chinese: string;
   usage: string;
 }
 
@@ -61,8 +61,10 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
       <div className="container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         <Card className="mb-8 backdrop-blur-xl bg-white/70 shadow-lg transition-all duration-300 hover:shadow-xl">
-        <CardTitle>Hot Word Query</CardTitle>
-          <CardContent className="pt-6">
+        <CardHeader>
+          <CardTitle>Hot Word Query</CardTitle>
+        </CardHeader>          
+        <CardContent className="pt-6">
             <form onSubmit={handleWordQuery} className="max-w-2xl mx-auto flex gap-2">
               <Input
                 type="text"
@@ -100,7 +102,7 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
                   <strong>Literal Translation:</strong> {queryResult.literal_translation}
                 </p>
                 <p className="p-3 bg-white/40 rounded-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/60">
-                  <strong>English Translation:</strong> {queryResult.english_translation}
+                  <strong>Chinese:</strong> {queryResult.chinese}
                 </p>
                 <p className="p-3 bg-white/40 rounded-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/60">
                   <strong>Usage Example:</strong> {queryResult.usage}

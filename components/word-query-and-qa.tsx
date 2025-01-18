@@ -12,7 +12,7 @@ import { Loader2 } from 'lucide-react'
 interface WordQueryResult {
   word: string;
   literal_translation: string;
-  chinese: string;
+  english_translation: string;
   usage: string;
 }
 
@@ -33,7 +33,7 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`https://your-worker.workers.dev/?word=${encodeURIComponent(word)}`)
+      const response = await fetch(`https://wordapi.modujobs.tech/?word=${encodeURIComponent(word)}`)
       if (!response.ok) {
         throw new Error('Failed to fetch word definition')
       }
@@ -53,69 +53,127 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <form onSubmit={handleWordQuery} className="flex gap-2 mb-4">
-        <Input
-          type="text"
-          placeholder="Enter a word..."
-          value={word}
-          onChange={(e) => setWord(e.target.value)}
-          className="flex-grow"
-        />
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Query
-        </Button>
-      </form>
-
-      {error && (
-        <Card className="mb-4 bg-red-50">
-          <CardContent className="text-red-500">{error}</CardContent>
-        </Card>
-      )}
-
-      {queryResult && (
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle>Query Result: {queryResult.word}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p><strong>直译：</strong> {queryResult.literal_translation}</p>
-            <p><strong>中文：</strong> {queryResult.chinese}</p>
-            <p><strong>用法：</strong> {queryResult.usage}</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
+      <div className="container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
+        <Card className="mb-8 backdrop-blur-xl bg-white/70 shadow-lg transition-all duration-300 hover:shadow-xl">
+          <CardContent className="pt-6">
+            <form onSubmit={handleWordQuery} className="max-w-2xl mx-auto flex gap-2">
+              <Input
+                type="text"
+                placeholder="Enter a word..."
+                value={word}
+                onChange={(e) => setWord(e.target.value)}
+                className="flex-grow bg-white/50 backdrop-blur-sm border-transparent focus:border-blue-300 transition-all duration-300"
+              />
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                className="bg-blue-500 hover:bg-blue-600 transition-colors duration-300"
+              >
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Search
+              </Button>
+            </form>
           </CardContent>
         </Card>
-      )}
 
-      {qaItems.length > 0 ? (
-        <div className="grid md:grid-cols-2 gap-4">
-          {qaItems.map(qa => (
-            <Card 
-              key={qa.id} 
-              className="cursor-pointer hover:bg-gray-100"
-              onClick={() => handleQAClick(qa)}
-            >
-              <CardHeader>
-                <CardTitle>{qa.title}</CardTitle>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500 italic">No Q&A items available.</p>
-      )}
+        {error && (
+          <Card className="mb-8 bg-red-50/80 backdrop-blur-xl animate-slideIn">
+            <CardContent className="text-red-500">{error}</CardContent>
+          </Card>
+        )}
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{selectedQA?.title}</DialogTitle>
-          </DialogHeader>
-          <div className="mt-2 max-h-[70vh] overflow-y-auto">
-            <ReactMarkdown>{selectedQA?.content || ''}</ReactMarkdown>
-          </div>
-        </DialogContent>
-      </Dialog>
+        {queryResult && (
+          <Card className="mb-8 backdrop-blur-xl bg-white/70 shadow-lg animate-slideIn">
+            <CardHeader>
+              <CardTitle>Search Result: {queryResult.word}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="p-3 bg-white/40 rounded-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/60">
+                  <strong>Literal Translation:</strong> {queryResult.literal_translation}
+                </p>
+                <p className="p-3 bg-white/40 rounded-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/60">
+                  <strong>English Translation:</strong> {queryResult.english_translation}
+                </p>
+                <p className="p-3 bg-white/40 rounded-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/60">
+                  <strong>Usage Example:</strong> {queryResult.usage}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="mb-8 backdrop-blur-xl bg-white/70 shadow-lg">
+          <CardHeader>
+            <CardTitle>Q&A Section</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {qaItems.length > 0 ? (
+              <div className="grid md:grid-cols-2 gap-4">
+                {qaItems.map(qa => (
+                  <Card
+                    key={qa.id}
+                    className="cursor-pointer bg-white/40 backdrop-blur-sm hover:bg-white/60 transition-all duration-300 transform hover:scale-102"
+                    onClick={() => handleQAClick(qa)}
+                  >
+                    <CardHeader>
+                      <CardTitle>{qa.title}</CardTitle>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">No Q&A items available.</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="max-w-3xl backdrop-blur-xl bg-white/90">
+            <DialogHeader>
+              <DialogTitle>{selectedQA?.title}</DialogTitle>
+            </DialogHeader>
+            <div className="mt-2 max-h-[70vh] overflow-y-auto">
+              <ReactMarkdown>{selectedQA?.content || ''}</ReactMarkdown>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .hover\:scale-102:hover {
+          transform: scale(1.02);
+        }
+      `}</style>
     </div>
   )
 }
-

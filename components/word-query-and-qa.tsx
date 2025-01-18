@@ -34,6 +34,11 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
     setError(null)
     try {
       const response = await fetch(`https://wordapi.modujobs.tech/?word=${encodeURIComponent(word)}`)
+      if (response.status === 404) {
+        setError('Not included yet, please contact eteam2429@gmail.com')
+        setQueryResult(null)
+        return
+      }
       if (!response.ok) {
         throw new Error('Failed to fetch word definition')
       }
@@ -56,6 +61,7 @@ export default function WordQueryAndQA({ qaItems }: WordQueryAndQAProps) {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
       <div className="container mx-auto px-4 py-8 max-w-6xl animate-fadeIn">
         <Card className="mb-8 backdrop-blur-xl bg-white/70 shadow-lg transition-all duration-300 hover:shadow-xl">
+        <h1 className="text-2xl font-bold mb-4">Word Query</h1>
           <CardContent className="pt-6">
             <form onSubmit={handleWordQuery} className="max-w-2xl mx-auto flex gap-2">
               <Input
